@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  password    String
+  name        String
+  image       String?
+  description String
+  createdAt   DateTime  @default(now())
+  lastLoginAt DateTime?
+
+  SocialMediaLinks SocialMediaLinks[]
+  UserBlockedList  Blocked[]          @relation("UserBlockedList")
+  UserBlocked      Blocked[]          @relation("UserBlocked")
+
+  UserPendingList PendingRequests[] @relation("UserPendingList")
+  UserPending     PendingRequests[] @relation("UserPending")
+
+  UserFriendRequestsist FriendRequests[]  @relation("UserFriendRequestsist")
+  UserFriendRequest     FriendRequests[]  @relation("UserFriendRequest")
+
+  UserFriendList Friend[]  @relation("UserFriendList")
+  UserFriend     Friend[]  @relation("UserFriend")
+
+  Member Member[]
+  Message Message[]
+  Chat      Chat[]
+  MessageReaction MessageReaction[]
+}
+
+model SocialMediaLinks {
+  id     String          @id @default(uuid())
+  userId String?
+  chatId String?
+  type   SocialMediaType
+  User   User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Chat   Chat?            @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+enum SocialMediaType {
+  FACEBOOK
+  DISCORD
+  GITHUB
+  INSTAGRAM
+}
+
+model Blocked {
+  id       String @id @default(uuid())
+  clientId String
+  userId   String
+  Client   User   @relation("UserBlockedList", fields: [clientId], references: [id], onDelete: Cascade)
+  User     User   @relation("UserBlocked", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PendingRequests {
+  id       String @id @default(uuid())
+  clientId String
+  userId   String
+  Client   User   @relation("UserPendingList", fields: [clientId], references: [id], onDelete: Cascade)
+  User     User   @relation("UserPending", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FriendRequests {
+  id       String @id @default(uuid())
+  clientId String
+  userId   String
+  Client   User   @relation("UserFriendRequestsist", fields: [clientId], references: [id], onDelete: Cascade)
+  User     User   @relation("UserFriendRequest", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+model Friend {
+  id       String @id @default(uuid())
+  clientId String
+  userId   String
+  Client   User   @relation("UserFriendList", fields: [clientId], references: [id], onDelete: Cascade)
+  User     User   @relation("UserFriend", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Chat {
+  id       String @id @default(uuid())
+
+  isGroup  Boolean @default(false)
+  name     String?
+  descreption String?
+  image    String?
+  ownerId  String?
+
+  socialMediaLinks SocialMediaLinks[]
+  User     User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  Member Member[] 
+  Message Message[]
+}
+
+model Member {
+  id       String @id @default(uuid())
+  chatId   String
+  userId   String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id       String @id @default(uuid())
+  userId String
+  chatId   String
+  type MessageType
+  content  String  @default("")
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  Attachment Attachment[]
+  MessageReaction MessageReaction[]
+}
+
+enum MessageType {
+  SIMPLE
+  COMPLEX
+}
+
+model Attachment {
+  id       String @id @default(uuid())
+  messageId String
+  type AttachmentType
+  url String
+  Message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+enum AttachmentType {
+  PHOTO
+  VIDEO
+  FILE
+  AUDIO
+}
+
+model MessageReaction {
+  id       String @id @default(uuid())
+  userId String
+  messageId String
+  type MessageReactionType
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+enum MessageReactionType {
+  HEART
+  LIKE
+  DISLIKE
+  SMILE
+  NORMAL
+  SAD
+}

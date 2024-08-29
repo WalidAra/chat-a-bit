@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  title: Backend API
+  version: 1.0.0
+  description: API for the backend services
+
+servers:
+  - url: http://localhost:2198/
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      tags:
+        - health
+      responses:
+        '200':
+          description: Health check passed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    nullable: true
+        '500':
+          description: Health check failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    nullable: true
