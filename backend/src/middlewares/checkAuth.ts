@@ -1,5 +1,5 @@
-import { Error500 } from "../constants";
-import { JwtHelper } from "../helpers";
+import { Error500 } from "@/constants";
+import { JwtHelper } from "@/helpers";
 import { Request, Response, NextFunction } from "express";
 
 const checkAuth = (

@@ -6,9 +6,9 @@ import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import cookieParser from "cookie-parser";
 
-import { configENV } from "./config";
-import router from "./routes";
-import { logger } from "./scripts";
+import { configENV } from "@/config";
+import router from "@/routes";
+import { logger } from "@/scripts";
 
 const PORT = configENV.port || 3000;
 const swaggerDocument = YAML.load("./swagger.yaml");

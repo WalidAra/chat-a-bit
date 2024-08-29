@@ -1,4 +1,4 @@
-import { Error500 } from "../constants";
+import { Error500 } from "@/constants";
 import { Request, Response } from "express";
 
 const checkHealth = async (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { config } from "../utils";
+import { config } from "@/utils";
 import expressListEndpoints from "express-list-endpoints";
 import chalk from "chalk";
 

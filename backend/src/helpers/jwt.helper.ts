@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { configENV } from "../config";
+import { configENV } from "@/config";
 
 export class JwtHelper {
   private static jwtSecret = configENV.jwtSecret;
