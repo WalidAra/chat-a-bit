@@ -2,17 +2,17 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
-"scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
-  "start": "node -r tsconfig-paths/register dist/app.js",
-  "build": "tsc",
-  "db:migrate": "npx prisma migrate dev",
-  "db:studio": "npx prisma studio",
-  "db:reset": "npx prisma migrate reset",
-  "db:seed": "node dist/seed/index.js",
-  "prepare": "npm run build"
-},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
+    "start": "node -r tsconfig-paths/register dist/app.js",
+    "build": "tsc",
+    "db:migrate": "npx prisma migrate dev",
+    "db:studio": "npx prisma studio",
+    "db:reset": "npx prisma migrate reset",
+    "db:seed": "node dist/seed/index.js",
+    "prepare": "npm run build"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -29,6 +29,7 @@
     "express-list-endpoints": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.4",
+    "socket.io": "^4.7.5",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
