@@ -5,7 +5,7 @@
   "tsx": true,
   "tailwind": {
     "config": "tailwind.config.js",
-    "css": "src/styles/global.css",
+    "css": "src/styles/globals.css",
     "baseColor": "slate",
     "cssVariables": true,
     "prefix": ""
@@ -13,7 +13,7 @@
   "aliases": {
     "components": "src/components",
     "utils": "src/lib/utils",
-    "ui": "src/components/ui",
+    "ui": "src/components/atoms/ui",
     "magicui": "src/components/magicui"
   }
 }

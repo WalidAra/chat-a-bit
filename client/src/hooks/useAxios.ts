@@ -3,7 +3,7 @@ import { API_URL, HEADER } from "../config";
 import { Fetch, FetchResponse } from "../types";
 
 const useAxios = async <T>({
-  domain,
+
   endpoint,
   feature,
   method,
@@ -12,7 +12,7 @@ const useAxios = async <T>({
   includeToken = false,
 }: Fetch): Promise<FetchResponse<T>> => {
   
-  const url = `${API_URL}${domain}/${
+  const url = `${API_URL}${
     includeToken ? "private" : "public"
   }/${feature}/${endpoint}`;
 

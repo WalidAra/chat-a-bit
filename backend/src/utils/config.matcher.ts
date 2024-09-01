@@ -7,6 +7,9 @@ const config = {
     POST: chalk.yellowBright,
     PUT: chalk.cyanBright,
     DELETE: chalk.red,
+    PATCH: chalk.yellowBright,
+    OPTIONS: chalk.blueBright,
+    HEAD: chalk.whiteBright,
   },
 };
 

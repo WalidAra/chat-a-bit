@@ -13,9 +13,10 @@ model User {
   password    String
   name        String
   image       String?
-  description String
+  description String?
   createdAt   DateTime  @default(now())
   lastLoginAt DateTime?
+  provider    Provider @default(DIRECT)
 
   SocialMediaLinks SocialMediaLinks[]
   UserBlockedList  Blocked[]          @relation("UserBlockedList")
@@ -34,6 +35,11 @@ model User {
   Message Message[]
   Chat      Chat[]
   MessageReaction MessageReaction[]
+}
+
+enum Provider {
+  DIRECT 
+  GOOGLE
 }
 
 model SocialMediaLinks {

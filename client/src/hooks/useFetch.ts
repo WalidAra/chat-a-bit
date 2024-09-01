@@ -4,7 +4,7 @@ import { API_URL, HEADER } from "../config";
 import { Fetch, FetchResponse } from "../types";
 
 const useFetch = <T>({
-  domain,
+
   endpoint,
   feature,
   method,
@@ -15,7 +15,7 @@ const useFetch = <T>({
   const [response, setResponse] = useState<FetchResponse<T> | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const url = `${API_URL}${domain}/${
+  const url = `${API_URL}${
     includeToken ? "private" : "public"
   }/${feature}/${endpoint}`;
 
@@ -55,7 +55,7 @@ const useFetch = <T>({
     ) {
       getData();
     }
-  }, [domain, endpoint, feature, method, body, accessToken, url, includeToken]);
+  }, [ endpoint, feature, method, body, accessToken, url, includeToken]);
 
   return { response, loading };
 };
