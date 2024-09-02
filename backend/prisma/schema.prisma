@@ -47,6 +47,7 @@ model SocialMediaLinks {
   userId String?
   chatId String?
   type   SocialMediaType
+  url    String
   User   User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
   Chat   Chat?            @relation(fields: [chatId], references: [id], onDelete: Cascade)
 }
@@ -81,7 +82,6 @@ model FriendRequests {
   Client   User   @relation("UserFriendRequestsist", fields: [clientId], references: [id], onDelete: Cascade)
   User     User   @relation("UserFriendRequest", fields: [userId], references: [id], onDelete: Cascade)
 }
-
 
 model Friend {
   id       String @id @default(uuid())

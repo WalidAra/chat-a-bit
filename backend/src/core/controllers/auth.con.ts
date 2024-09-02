@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { JwtHelper } from "../../helpers";
+import { JwtHelper } from "@/helpers";
 import bcrypt from "bcrypt";
 import { configENV } from "@/config";
 import { prisma } from "@/config";

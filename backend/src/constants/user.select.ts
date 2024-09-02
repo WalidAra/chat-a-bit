@@ -5,7 +5,6 @@ const userSelection = {
   createdAt: true,
   description: true,
   image: true,
-  provider: true,
 };
 
 export default userSelection;

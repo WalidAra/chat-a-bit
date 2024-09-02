@@ -25,5 +25,4 @@ export type Client = {
   createdAt: string;
   description: string | null;
   image: string | null;
-  provider: "DIRECT" | "GOOGLE";
 };
