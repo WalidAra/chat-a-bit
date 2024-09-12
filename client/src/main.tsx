@@ -7,6 +7,6 @@ import { Toaster } from "@/components/atoms/ui/sonner";
 createRoot(document.getElementById("root")!).render(
   <AuthProvider>
     <App />
-    <Toaster richColors />
+    <Toaster />
   </AuthProvider>
 );

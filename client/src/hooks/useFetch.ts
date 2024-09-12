@@ -1,63 +1,68 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+
+import { Fetch, FetchResponse } from "@/types";
 import { useEffect, useState } from "react";
-import axios, { AxiosRequestConfig } from "axios";
-import { API_URL, HEADER } from "../config";
-import { Fetch, FetchResponse } from "../types";
+import { useAxios } from "./useAxios";
 
-const useFetch = <T>({
+type Props = Fetch & {
+  dependencies?: unknown[];
+};
 
+export const useFetch = <T>({
   endpoint,
   feature,
   method,
-  body,
   accessToken,
-  includeToken = false,
-}: Fetch): { response: FetchResponse<T> | null; loading: boolean } => {
+  includeAccessToken,
+  callback,
+  data,
+  dependencies = [],
+}: Props): {
+  response: FetchResponse<T> | null;
+  isLoading: boolean;
+  setResponse: React.Dispatch<React.SetStateAction<FetchResponse<T> | null>>;
+} => {
   const [response, setResponse] = useState<FetchResponse<T> | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const url = `${API_URL}${
-    includeToken ? "private" : "public"
-  }/${feature}/${endpoint}`;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getData = async () => {
+      setIsLoading(true);
       try {
-        const axiosConfig: AxiosRequestConfig = {
-          method: method,
-          url,
-          headers: {
-            "Content-Type": "application/json",
-            ...(includeToken && { [HEADER]: `Bearer ${accessToken}` }),
-          },
-          data: body,
-        };
-
-        const res = await axios(axiosConfig);
-        setResponse(res.data as FetchResponse<T>);
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          setResponse(error.response?.data as FetchResponse<T>);
-        } else {
-          setResponse({
-            status: false,
-            message: "An unexpected error occurred",
-            data: null,
-          } as FetchResponse<T>);
-        }
+        const res = await useAxios<T>({
+          endpoint,
+          method,
+          feature,
+          accessToken,
+          includeAccessToken,
+          callback,
+          data,
+        });
+        setResponse(res);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     if (
-      (accessToken && includeToken === true) ||
-      (includeToken === false && !accessToken)
+      (accessToken && includeAccessToken === true) ||
+      (accessToken === null && includeAccessToken === false)
     ) {
       getData();
+    } else {
+      setIsLoading(false);
     }
-  }, [ endpoint, feature, method, body, accessToken, url, includeToken]);
+  }, [
+    accessToken,
+    callback,
+    data,
+    endpoint,
+    feature,
+    includeAccessToken,
+    method,
+    ...dependencies,
+  ]);
 
-  return { response, loading };
+  return { response, setResponse, isLoading };
 };
-
-export default useFetch;

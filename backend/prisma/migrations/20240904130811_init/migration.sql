@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "Provider" AS ENUM ('DIRECT', 'GOOGLE');
+
+-- CreateEnum
 CREATE TYPE "SocialMediaType" AS ENUM ('FACEBOOK', 'DISCORD', 'GITHUB', 'INSTAGRAM');
 
 -- CreateEnum
@@ -17,9 +20,10 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "image" TEXT,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "lastLoginAt" TIMESTAMP(3),
+    "provider" "Provider" NOT NULL DEFAULT 'DIRECT',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -30,6 +34,7 @@ CREATE TABLE "SocialMediaLinks" (
     "userId" TEXT,
     "chatId" TEXT,
     "type" "SocialMediaType" NOT NULL,
+    "url" TEXT NOT NULL,
 
     CONSTRAINT "SocialMediaLinks_pkey" PRIMARY KEY ("id")
 );

@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 const FindFriendsCard = () => {
   return (
-    <Card className="p-4 text-center w-80">
+    <Card className="p-2 text-center w-[90%] mx-auto md:w-[400px]">
       <CardHeader>
         <CardTitle>Find Friends</CardTitle>
         <CardDescription>
@@ -19,8 +19,8 @@ const FindFriendsCard = () => {
         </CardDescription>
       </CardHeader>
       <CardFooter>
-        <Link to={"/"} className="w-full">
-          <Button>Find Friends</Button>
+        <Link to={"/friends"} className="w-full">
+          <Button className="w-64" >Find Friends</Button>
         </Link>
       </CardFooter>
     </Card>

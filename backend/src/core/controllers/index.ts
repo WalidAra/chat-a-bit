@@ -1,2 +1,2 @@
-export { login, refresh, register } from "./auth.con";
-export { deleteUser, getUserProfile } from "./client.cn";
+export { login, refresh, register, LogOut } from "./auth.con";
+export { deleteUser, getUserProfile ,searchUsers } from "./client.cn";

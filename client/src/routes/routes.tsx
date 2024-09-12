@@ -4,10 +4,13 @@ import {
   Routes,
   Outlet,
 } from "react-router-dom";
-import { AuthMiddleware, HomeMiddleware } from "@/components/utils/";
+import { AuthMiddleware, HomeMiddleware } from "@/components/utils";
 import { Login, Register } from "@/components/pages/auth";
-import HomeLayout from "@/components/layouts/HomeLayout";
-import FindFriendsCard from "@/components/pages/home/fresh/FindFriendsCard";
+import { HomeLayout } from "@/components/layouts";
+import { FriendsLayout } from "@/components/layouts";
+import { Blocked, Friends, Pending } from "@/components/pages/home/friends/";
+import { FindFriendsCard } from "@/components/pages/home/fresh";
+import { Requests } from "@/components/pages/home/friends";
 
 const AppRouter = () => {
   return (
@@ -46,13 +49,20 @@ const AppRouter = () => {
           >
             <Route index element={<FindFriendsCard />} />
 
-            <Route path="chats/:chatId" element={<></>} />
-            <Route path="friends" element={<></>}>
-              <Route index element={<></>} />
-              <Route path="blocked" element={<></>} />
-              <Route path="requests" element={<></>} />
-              <Route path="pending" element={<></>} />
+            <Route
+              path="friends"
+              element={
+                <FriendsLayout>
+                  <Outlet />
+                </FriendsLayout>
+              }
+            >
+              <Route index element={<Friends />} />
+              <Route path="blocked" element={<Blocked />} />
+              <Route path="requests" element={<Requests />} />
+              <Route path="pending" element={<Pending />} />
             </Route>
+            <Route path="chats/:chatId" element={<></>} />
           </Route>
         </Route>
       </Routes>

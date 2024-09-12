@@ -3,7 +3,6 @@ import { Button } from "@/components/atoms/ui/button";
 import { Input } from "@/components/atoms/ui/input";
 import { AuthLayout } from "@/components/layouts";
 import { Link } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
 import { Checkbox } from "@/components/atoms/ui/checkbox";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,10 +18,10 @@ import {
 } from "@/components/atoms/ui/form";
 import { useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
-import { useAxios } from "@/hooks";
+import { useAuth, useAxios } from "@/hooks";
 import { accessToken, Client } from "@/types";
-import { TOKEN_KEY } from "@/config";
 import { toast } from "sonner";
+import { GoogleOAuth } from "@/components/molecules";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -32,6 +31,8 @@ const formSchema = z.object({
 });
 
 const Register = () => {
+  const { setToken } = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,13 +50,12 @@ const Register = () => {
     const res = await useAxios<Client & accessToken>({
       endpoint: "register",
       method: "POST",
-      body: values,
+      data: values,
       feature: "auth",
     });
 
     if (res.status === true) {
-      localStorage.setItem(TOKEN_KEY, res.data.accessToken);
-      window.location.reload();
+      setToken(res.data.accessToken);
     } else {
       toast.error("Uh oh! Something went wrong.", {
         description: res.message,
@@ -71,9 +71,9 @@ const Register = () => {
     <AuthLayout>
       <div className=" flex flex-col w-[350px] xl:w-[360px] gap-6">
         <div className="grid gap-2 text-center">
-          <h1 className="text-3xl font-bold">Login</h1>
+          <h1 className="text-3xl font-bold">Register</h1>
           <p className="text-balance text-muted-foreground">
-            Enter your email below to login to your account
+            Enter your details below to create your account
           </p>
         </div>
 
@@ -161,13 +161,7 @@ const Register = () => {
             </Button>
           </form>
 
-          <Button
-            variant="outline"
-            className="w-full mt-4 items-center flex gap-2"
-          >
-            <FcGoogle className="size-5" />
-            Sign up with Google
-          </Button>
+          <GoogleOAuth isSignUp={true} />
         </Form>
 
         <div className="mt-4 text-center text-sm">
@@ -180,5 +174,4 @@ const Register = () => {
     </AuthLayout>
   );
 };
-
 export default Register;

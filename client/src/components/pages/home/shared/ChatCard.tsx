@@ -9,23 +9,23 @@ const ChatCard = () => {
   return (
     <Link
       to={"/"}
-      className="w-full flex items-center gap-2 p-2 rounded-md hover:bg-muted"
+      className="flex justify-between items-center gap-4 p-2 rounded-lg border hover:bg-muted border-border"
     >
-      <Avatar className="w-10 h-10">
-        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-
-      <div className="grid grid-cols-1frauto items-center gap-2">
-        <div className="flex flex-col">
-          <h2 className="font-medium text-foreground">Ezio</h2>
-          <div className="text-muted-foreground text-sm flex flex-col">
-            <p className="line-clamp-1">hey , what's going on there ?</p>
-            <p className="text-xs">4:30AM</p>
+      <div className="flex flex-1 items-center gap-4">
+        <Avatar className="border w-10 h-10">
+          <AvatarImage src="/placeholder-user.jpg" alt="Image" />
+          <AvatarFallback>OM</AvatarFallback>
+        </Avatar>
+        <div className="grid gap-0.5">
+          <p className="text-sm font-medium leading-none">Sofia Davis</p>
+          <div className="w-full flex gap-1 items-center text-xs text-muted-foreground ">
+            <p className="line-clamp-1">hey what&apos;s going on? &middot;</p>
+            <p>2h</p>
           </div>
+          <p className="text-xs text-muted-foreground">4:30AM</p>
         </div>
-        <div></div>
       </div>
+      <div className=""></div>
     </Link>
   );
 };

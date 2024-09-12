@@ -5,6 +5,6 @@ import privateRoutes from "./private";
 import { checkAuth } from "@/middlewares";
 
 router.use("/public", publicRoutes);
-router.use("/private", checkAuth, privateRoutes);
+router.use("/private", checkAuth as express.RequestHandler, privateRoutes);
 
 export default router;

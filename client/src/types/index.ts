@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type Fetch = {
-  accessToken?: string;
-  feature: "auth" | "client" | "accounts" | "favorite" | "collection";
+  accessToken?: string | null;
+  feature: "auth" | "client" | "oauth";
   endpoint: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
-  body?: object;
-  includeToken?: boolean;
-  callback?: () => void;
+  data?: object;
+  includeAccessToken?: boolean;
+  callback?: (() => void) | ((res: any) => void);
 };
 
 export type FetchResponse<T> = {
@@ -22,7 +23,36 @@ export type Client = {
   id: string;
   email: string;
   name: string;
-  createdAt: string;
+  createdAt: Date;
   description: string | null;
   image: string | null;
+};
+
+export type Notification =
+  | "friendRequest"
+  | "friendRequestAccepted"
+  | "message";
+
+export type PendingRequest = {
+  id: string;
+  clientId: string;
+  userId: string;
+};
+
+export type FriendRequest = {
+  id: string;
+  clientId: string;
+  userId: string;
+};
+
+export type Friend = {
+  id: string;
+  clientId: string;
+  userId: string;
+};
+
+export type Block = {
+  id: string;
+  clientId: string;
+  userId: string;
 };

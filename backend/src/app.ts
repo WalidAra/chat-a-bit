@@ -7,8 +7,8 @@ import YAML from "yamljs";
 import cookieParser from "cookie-parser";
 import router from "@/routes";
 
-import { createServer } from "node:http";
-import { configENV, socketInitializer } from "@/config";
+import { createServer } from "http";
+import { configENV, passport, socketInitializer } from "@/config";
 import { logger } from "@/scripts";
 
 const PORT = configENV.port || 3000;
@@ -16,10 +16,17 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 
 const app: Express = express();
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
 const httpServer = createServer(app);
 socketInitializer(httpServer);
@@ -27,5 +34,4 @@ socketInitializer(httpServer);
 app.use("/", router);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(PORT, () => logger(app, Number(PORT)));
-    
+httpServer.listen(PORT, () => logger(app, Number(PORT)));

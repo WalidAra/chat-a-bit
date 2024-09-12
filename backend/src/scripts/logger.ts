@@ -28,12 +28,12 @@ const logger = (app: Express, PORT: number) => {
         console.log(
           colorFunction(
             `~~> ${endpoint.methods.join(", ")}`,
-            chalk.green(`${endpoint.path}`)
+            chalk.hex("#000")(`${endpoint.path}`)
           )
         );
       });
     } else {
-      console.log(chalk.black(`No endpoints for matcher: ${matcher}`));
+      console.log(chalk.hex("#FF0000")(`No endpoints for matcher: ${matcher}`));
     }
   });
 

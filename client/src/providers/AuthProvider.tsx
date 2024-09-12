@@ -1,42 +1,57 @@
-import { TOKEN_KEY } from "@/config";
+import { useFetch } from "@/hooks";
+import { accessToken } from "@/types";
 import { createContext } from "react";
 
 type Props = {
   token: string | null;
-  setToken: (token: string) => void;
-  handleLogout: () => void;
-  handleSetToken: (token: string) => void;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export const Auth = createContext<Props>({
   token: null,
   setToken: () => {},
-  handleLogout: () => {},
-  handleSetToken: () => {},
 });
 
 import React from "react";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  
   const [token, setToken] = React.useState<string | null>(() => {
-    return localStorage.getItem(TOKEN_KEY);
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchToken = urlParams.get("token");
+
+    if (searchToken) {
+      const url = new URL(window.location.toString());
+      url.searchParams.delete("token");
+      window.history.replaceState({}, document.title, url.pathname);
+    }
+    return searchToken;
   });
 
-  const handleSetToken = (token: string) => {
-    localStorage.setItem("token", token);
-    setToken(token);
-  };
+  const { isLoading, response } = useFetch<accessToken>({
+    endpoint: "refresh",
+    feature: "auth",
+    method: "GET",
+    accessToken: token,
+    includeAccessToken: false,
+  });
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-  };
+  if (isLoading === true) {
+    return null;
+  }
 
   return (
-    <Auth.Provider value={{ setToken, token, handleLogout, handleSetToken }}>
+    <Auth.Provider
+      value={{
+        setToken,
+        token:
+          token ||
+          ((response?.status === true ? response?.data.accessToken : null) ??
+            null),
+      }}
+    >
       {children}
     </Auth.Provider>
   );
 };
-
 export default AuthProvider;

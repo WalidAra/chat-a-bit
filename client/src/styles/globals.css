@@ -69,5 +69,5 @@
 }
 
 .custom-toast-error {
-  @apply bg-red-100 text-red-500; /* Tailwind classes for red background and white text */
+  @apply bg-red-100 text-red-500;
 }

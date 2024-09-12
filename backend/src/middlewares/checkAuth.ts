@@ -12,7 +12,7 @@ const checkAuth = (
     const token = authHeader?.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({
+      return res.status(404).json({
         message: "Authentication failed: No token provided",
         status: false,
         data: null,

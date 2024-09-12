@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
 const config = {
-  matchers: ["/health", "/auth", "/client"],
+  matchers: ["/health", "/auth", "/client", "/oauth"],
   methods: {
     GET: chalk.hex("#60E809"),
     POST: chalk.yellowBright,
