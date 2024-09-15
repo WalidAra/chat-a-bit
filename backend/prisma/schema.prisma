@@ -65,6 +65,8 @@ model Blocked {
   userId   String
   Client   User   @relation("UserBlockedList", fields: [clientId], references: [id], onDelete: Cascade)
   User     User   @relation("UserBlocked", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, userId])
 }
 
 model PendingRequests {
@@ -73,6 +75,8 @@ model PendingRequests {
   userId   String
   Client   User   @relation("UserPendingList", fields: [clientId], references: [id], onDelete: Cascade)
   User     User   @relation("UserPending", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, userId])
 }
 
 model FriendRequests {
@@ -81,6 +85,8 @@ model FriendRequests {
   userId   String
   Client   User   @relation("UserFriendRequestsist", fields: [clientId], references: [id], onDelete: Cascade)
   User     User   @relation("UserFriendRequest", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, userId])
 }
 
 model Friend {
@@ -89,6 +95,8 @@ model Friend {
   userId   String
   Client   User   @relation("UserFriendList", fields: [clientId], references: [id], onDelete: Cascade)
   User     User   @relation("UserFriend", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, userId])
 }
 
 model Chat {

@@ -10,9 +10,6 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
 
   useLayerFetch<Client>({
     callback: (res) => {
-      console.log("====================================");
-      console.log(res);
-      console.log("====================================");
       if (res?.status === true) {
         dispatch(setProfile(res.data));
       } else {

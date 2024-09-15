@@ -3,7 +3,10 @@ import { Socket } from "socket.io";
 
 const checkAuthSocket = (socket: Socket, next: (err?: any) => void) => {
   try {
-    const token = socket.handshake.auth.token as string; 
+    
+    const socketHeader = socket.handshake.auth.token as string;
+    const token = socketHeader?.split(" ")[1];
+
     if (!token) {
       return next(null);
     }

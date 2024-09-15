@@ -6,7 +6,7 @@ import ReduxProvider from "@/providers/ReduxProvider";
 import { ProfileProvider, StateManager } from "@/components/utils";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
-  const { socket } = useSocket();
+  const socket = useSocket();
 
   useEffect(() => {
     if (socket) {
