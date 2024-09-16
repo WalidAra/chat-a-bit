@@ -4,30 +4,44 @@ import {
   AvatarImage,
 } from "@/components/atoms/ui/avatar";
 import { Link } from "react-router-dom";
+import { LuCheckCheck } from "react-icons/lu";
+import { Chat, Client, Message } from "@/types";
+import { defaultPfp } from "@/constants";
 
-const ChatCard = () => {
+type Props = {
+  chat: Chat & { message: Message & { sender: Client } };
+};
+
+const ChatCard = ({ chat }: Props) => {
+  const {
+    message: { sender, content, createdAt },
+  } = chat;
+
   return (
     <Link
-      to={"/"}
+      to={`/chats/${chat.id}`}
       className="flex justify-between items-center gap-4 p-2 rounded-lg border hover:bg-muted border-border"
     >
       <div className="flex flex-1 items-center gap-4">
         <Avatar className="border w-10 h-10">
-          <AvatarImage src="/placeholder-user.jpg" alt="Image" />
-          <AvatarFallback>OM</AvatarFallback>
+          <AvatarImage src={sender.image || defaultPfp} alt="Image" />
+          <AvatarFallback> {sender.name} </AvatarFallback>
         </Avatar>
         <div className="grid gap-0.5">
-          <p className="text-sm font-medium leading-none">Sofia Davis</p>
+          <p className="text-sm font-medium leading-none"> {sender.name} </p>
           <div className="w-full flex gap-1 items-center text-xs text-muted-foreground ">
-            <p className="line-clamp-1">hey what&apos;s going on? &middot;</p>
+            <p className="line-clamp-1">{content}</p>
             <p>2h</p>
           </div>
-          <p className="text-xs text-muted-foreground">4:30AM</p>
+          <p className="text-xs text-muted-foreground">
+            {createdAt.toLocaleString()}
+          </p>
         </div>
       </div>
-      <div className=""></div>
+      <div className="text-green-600">
+        <LuCheckCheck />
+      </div>
     </Link>
   );
 };
-
 export default ChatCard;

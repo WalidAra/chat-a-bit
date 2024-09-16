@@ -21,7 +21,7 @@ const AccountCard = () => {
       to={"/"}
       className="w-full flex items-center hover:bg-gray-50 cursor-pointer duration-200 justify-between p-2 border-input rounded-md border"
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 shrink">
         <Avatar className="border w-10 h-10">
           <AvatarImage src="/placeholder-user.jpg" alt="Image" />
           <AvatarFallback>OM</AvatarFallback>
@@ -36,7 +36,7 @@ const AccountCard = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Button
+        {/* <Button
           variant={"secondary"}
           className="rounded-full text-muted-foreground hover:text-foreground"
           size={"icon"}
@@ -61,7 +61,7 @@ const AccountCard = () => {
               Block
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
     </Link>
   );

@@ -27,15 +27,6 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       email,
       provider: "DIRECT",
     },
-
-    include: {
-      Chat: {
-        select: {
-          descreption: true,
-          image: true,
-        },
-      },
-    },
   });
 
   if (isUser) {

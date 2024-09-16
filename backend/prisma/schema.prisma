@@ -104,7 +104,7 @@ model Chat {
 
   isGroup  Boolean @default(false)
   name     String?
-  descreption String?
+  description String?
   image    String?
   ownerId  String?
 
@@ -132,6 +132,7 @@ model Message {
   content  String  @default("")
   User User @relation(fields: [userId], references: [id], onDelete: Cascade)
   Chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 
   Attachment Attachment[]
   MessageReaction MessageReaction[]

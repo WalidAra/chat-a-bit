@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userReducer, pendingReducer, friendRequestReducer } from "./slices";
+import { userReducer } from "./slices";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
-    pending: pendingReducer,
-    friendRequest: friendRequestReducer,
   },
 });
 

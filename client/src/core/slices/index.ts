@@ -6,3 +6,6 @@ export { setPendingRequests } from "./pendingSlice";
 
 export { default as friendRequestReducer } from "./friendRequestSlice";
 export { setFriendRequests } from "./friendRequestSlice";
+
+export { default as chatsReducer } from "./chatsSlice";
+export { addChat } from "./chatsSlice";

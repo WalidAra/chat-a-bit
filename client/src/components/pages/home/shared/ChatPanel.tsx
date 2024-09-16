@@ -1,14 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Input } from "@/components/atoms/ui/input";
 import { useState } from "react";
 import { LuPenSquare } from "react-icons/lu";
-import ChatCard from "./ChatCard";
+import { useAuth, useFetch } from "@/hooks";
+import ChatsContainer from "./ChatsContainer";
+import { Chat, Client, Message } from "@/types";
 
 const ChatPanel = () => {
+  const { token } = useAuth();
   const [searchValue, setSearchValue] = useState<string>("");
-
-  const [chats, setChats] = useState<any>([]);
+  const { isLoading, response } = useFetch<
+    (Chat & { message: Message & { sender: Client } })[]
+  >({
+    endpoint: "chats",
+    method: "GET",
+    feature: "client",
+    accessToken: token,
+    includeAccessToken: true,
+  });
 
   return (
     <div className="xl:w-80 md-[250px] overflow-auto h-full hidden md:flex flex-col gap-4 border-r border-border p-4">
@@ -27,15 +35,13 @@ const ChatPanel = () => {
         </div>
       </div>
 
-      <div className="grid gap-1 relative ">
-        {chats.length > 0 ? (
-          chats.map((chat: any, index: number) => <ChatCard key={index} />)
-        ) : (
-          <div className="absolute top-0 text-center w-full" >There is no chats</div>
-        )}
-
-      </div>
+      {isLoading === true ? (
+        <></>
+      ) : (
+        <ChatsContainer chats={response?.data || []} />
+      )}
     </div>
   );
 };
+
 export default ChatPanel;
