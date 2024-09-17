@@ -1,21 +1,35 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "@/components/atoms/ui/button";
 import { Input } from "@/components/atoms/ui/input";
-import { AccountCard } from "./shared";
 import { LuList } from "react-icons/lu";
 import { LuGrid } from "react-icons/lu";
-import { useAuth, useFetch } from "@/hooks";
+import { useAuth, useFetch, useSocket } from "@/hooks";
 import { EntityWithUser } from "@/types";
+import { useEffect } from "react";
+import RequestCard from "./shared/RequestCard";
 
 const Requests = () => {
   const { token } = useAuth();
-  const { isLoading, response } = useFetch<EntityWithUser[]>({
+  const { isLoading, response, setResponse } = useFetch<EntityWithUser[]>({
     endpoint: "requests",
     feature: "client",
     method: "GET",
     accessToken: token,
     includeAccessToken: true,
   });
-  
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("requests", (data: EntityWithUser) => {
+        setResponse((prev) =>
+          prev ? { ...prev, data: [...prev.data, data] } : null
+        );
+      });
+    }
+  }, [socket]);
+
   return (
     <section className="w-full flex-1 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-4">
@@ -36,7 +50,7 @@ const Requests = () => {
       ) : (
         response?.status === true &&
         (response.data.length > 0 ? (
-          response.data.map((user) => <AccountCard key={user.id} />)
+          response.data.map((user) => <RequestCard request={user} />)
         ) : (
           <div className="flex items-center justify-center w-full h-full">
             <p className="text-muted-foreground">Pending list is empty</p>

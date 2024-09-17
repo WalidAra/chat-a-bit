@@ -8,4 +8,4 @@ export {
   getUserBlockedList,
   getUserFriendRequests,
   getUserPendingRequests,
-} from "./client.cn";
+} from "./client.con";

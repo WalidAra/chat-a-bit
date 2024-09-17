@@ -1,7 +1,6 @@
 import { createFriendRequest, createPendingRequest } from "@/models";
 import { Server, Socket } from "socket.io";
 import { redisClient } from "@/helpers";
-import { Notification } from "@/constants";
 
 export const sendFriendRequest = (io: Server, socket: Socket) => {
   const event = "sendFriendRequest";
@@ -10,23 +9,31 @@ export const sendFriendRequest = (io: Server, socket: Socket) => {
   return socket.on(event, async (obj: { receiverId: string }) => {
     const { receiverId } = obj;
 
+    const pendingRequest = await createPendingRequest(userId, receiverId);
+    io.to(socket.id).emit("pending", pendingRequest);
+
+    const friendRequest = await createFriendRequest(receiverId, userId);
     const receiverSocketId = await redisClient.hGet("online_users", receiverId);
 
     if (receiverSocketId) {
-      const pendingRequest = await createPendingRequest(userId, receiverId);
-      const friendRequest = await createFriendRequest(receiverId, userId);
+      io.to(receiverSocketId).emit("requests", friendRequest);
+    }
+  });
+};
 
-      io.to(receiverSocketId).emit(
-        "notification",
-        (): { data: object | null; type: Notification } => {
-          const notification: Notification = "friendRequest";
+export const cancelOrDeclineFriendRequest = (io: Server, socket: Socket) => {
+  const event = "cancelFriendRequest";
+  const userId = (socket as Socket & { userId: string }).userId;
 
-          return {
-            data: friendRequest,
-            type: notification,
-          };
-        }
-      );
+  return socket.on(event, (obj: { receiverId: string }) => {
+    const { receiverId } = obj;
+
+    // delete pending request
+    // delete friend request
+
+    if (receiverId) {
+      // get user friend requests
+      // emit with replace:true
     }
   });
 };

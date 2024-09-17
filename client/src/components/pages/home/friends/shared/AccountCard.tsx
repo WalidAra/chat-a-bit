@@ -3,67 +3,55 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/atoms/ui/avatar";
-import { Button } from "@/components/atoms/ui/button";
-import { LuMoreVertical } from "react-icons/lu";
-import { LuMessageCircle } from "react-icons/lu";
+import { defaultPfp } from "@/constants";
+import { Client } from "@/types";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/atoms/ui/dropdown-menu";
-import { Link } from "react-router-dom";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/atoms/ui/dialog";
 
-const AccountCard = () => {
+
+const AccountCard = ({
+  children,
+  user,
+}: {
+  children: React.ReactNode;
+  user: Client;
+}) => {
   return (
-    <Link
-      to={"/"}
-      className="w-full flex items-center hover:bg-gray-50 cursor-pointer duration-200 justify-between p-2 border-input rounded-md border"
-    >
-      <div className="flex items-center gap-3 shrink">
-        <Avatar className="border w-10 h-10">
-          <AvatarImage src="/placeholder-user.jpg" alt="Image" />
-          <AvatarFallback>OM</AvatarFallback>
-        </Avatar>
+    <Dialog>
+      <DialogTrigger>
+        <button className="w-full flex items-center hover:bg-gray-50 cursor-pointer duration-200 justify-between p-2 border-input rounded-md border">
+          <div className="flex items-center gap-3 shrink">
+            <Avatar className="border w-10 h-10">
+              <AvatarImage src={user.image || defaultPfp} alt="Image" />
+              <AvatarFallback> {user.name} </AvatarFallback>
+            </Avatar>
 
-        <div className="grid gap-0.5">
-          <p className="text-sm font-medium leading-none">Sofia Davis</p>
-          <div className="w-full flex gap-1 items-center text-xs text-muted-foreground ">
-            <p className="line-clamp-1">Online</p>
+            <div className="grid gap-0.5">
+              <p className="text-sm font-medium leading-none"> {user.name} </p>
+              <div className="w-full flex gap-1 items-center text-xs text-muted-foreground ">
+                <p className="line-clamp-1">Online</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        {/* <Button
-          variant={"secondary"}
-          className="rounded-full text-muted-foreground hover:text-foreground"
-          size={"icon"}
-        >
-          <LuMessageCircle className="size-5" />
-        </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button
-              variant={"secondary"}
-              className="rounded-full text-muted-foreground hover:text-foreground"
-              size={"icon"}
-            >
-              <LuMoreVertical className="size-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer">View</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-500 cursor-pointer">
-              Block
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
-      </div>
-    </Link>
+          {children}
+        </button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -15,7 +15,8 @@ export const createFriendRequest = async (clientId: string, userId: string) => {
     },
   });
 
-  return friendRequest;
+  const { User, ...requestDetails } = friendRequest;
+  return { user: User, id: requestDetails.id };
 };
 
 export const deleteFriendRequest = async (id: string) => {

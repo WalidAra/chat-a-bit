@@ -1,10 +1,10 @@
 import { Button } from "@/components/atoms/ui/button";
 import { Input } from "@/components/atoms/ui/input";
-import { AccountCard } from "./shared";
 import { LuList } from "react-icons/lu";
 import { LuGrid } from "react-icons/lu";
 import { useAuth, useFetch } from "@/hooks";
 import { EntityWithUser } from "@/types";
+import BlockedContainer from "./shared/BlockedContainer";
 
 const Blocked = () => {
   const { token } = useAuth();
@@ -36,7 +36,9 @@ const Blocked = () => {
       ) : (
         response?.status === true &&
         (response.data.length > 0 ? (
-          response.data.map((user) => <AccountCard key={user.id} />)
+          response.data.map((user) => (
+            <BlockedContainer request={user} key={user.id} />
+          ))
         ) : (
           <div className="flex items-center justify-center w-full h-full">
             <p className="text-muted-foreground">Block list is empty</p>

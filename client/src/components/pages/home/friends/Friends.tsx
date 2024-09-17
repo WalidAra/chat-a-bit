@@ -1,10 +1,10 @@
 import { Button } from "@/components/atoms/ui/button";
 import { Input } from "@/components/atoms/ui/input";
-import { AccountCard } from "./shared";
 import { LuList } from "react-icons/lu";
 import { LuGrid } from "react-icons/lu";
 import { useAuth, useFetch } from "@/hooks";
 import { EntityWithUser } from "@/types";
+import FriendContainer from "./shared/FriendContainer";
 
 const Friends = () => {
   const { token } = useAuth();
@@ -36,7 +36,7 @@ const Friends = () => {
       ) : (
         response?.status === true &&
         (response.data.length > 0 ? (
-          response.data.map((friend) => <AccountCard key={friend.id} />)
+          response.data.map((friend) => <FriendContainer request={friend} key={friend.id} />)
         ) : (
           <div className="flex items-center justify-center w-full h-full">
             <p className="text-muted-foreground">No friends found</p>

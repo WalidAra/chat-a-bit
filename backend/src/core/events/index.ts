@@ -1,1 +1,5 @@
-export { acceptFriendRequest, sendFriendRequest } from "./friendRequest";
+export {
+  acceptFriendRequest,
+  sendFriendRequest,
+  cancelOrDeclineFriendRequest,
+} from "./friendRequest";

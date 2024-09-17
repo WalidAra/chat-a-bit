@@ -1,4 +1,8 @@
-import { acceptFriendRequest, sendFriendRequest } from "@/core/events";
+import {
+  acceptFriendRequest,
+  cancelOrDeclineFriendRequest,
+  sendFriendRequest,
+} from "@/core/events";
 import { redisClient } from "@/helpers";
 import { checkAuthSocket } from "@/middlewares";
 import { Server, Socket } from "socket.io";
@@ -20,6 +24,7 @@ const socketInitializer = (httpServer: import("http").Server) => {
     if (userId) {
       await redisClient.hSet("online_users", userId, socket.id);
       sendFriendRequest(io, socket);
+      cancelOrDeclineFriendRequest(io, socket);
       acceptFriendRequest(io, socket);
 
       socket.on("disconnect", async () => {

@@ -7,22 +7,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose
 } from "@/components/atoms/ui/dialog";
 import { Input } from "@/components/atoms/ui/input";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { LuLoader2, LuSearch } from "react-icons/lu";
 import { useAuth, useAxios } from "@/hooks";
 import { Client } from "@/types";
 import FoundUserCard from "./FoundUserCard";
-import AvatarCircles from "@/components/magicui/avatar-circles";
 
 const AddFriendDialog = () => {
   const { token } = useAuth();
   const [formState, setFormState] = useState({
     name: "",
     users: [] as Client[],
-    selectedUsers: [] as Client[],
     isLoading: false,
   });
 
@@ -53,19 +50,6 @@ const AddFriendDialog = () => {
       }
     },
     [formState.name, token]
-  );
-
-  const handleUserSelection = useCallback((user: Client) => {
-    setFormState((prev) => ({
-      ...prev,
-      users: prev.users.filter((u) => u.id !== user.id),
-      selectedUsers: [...prev.selectedUsers, user],
-    }));
-  }, []);
-
-  const selectedAvatars = useMemo(
-    () => formState.selectedUsers.map((user) => user),
-    [formState.selectedUsers]
   );
 
   return (
@@ -111,48 +95,13 @@ const AddFriendDialog = () => {
                 </div>
               ) : formState.users.length > 0 ? (
                 formState.users.map((user) => (
-                  <FoundUserCard
-                    user={user}
-                    key={user.id}
-                    onClick={() => handleUserSelection(user)}
-                  />
+                  <FoundUserCard user={user} key={user.id} />
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground text-center">
                   No users found
                 </p>
               )}
-            </div>
-            <div className="w-full flex items-center justify-between pt-2">
-              <div>
-                {selectedAvatars.length > 0 && (
-                  <AvatarCircles avatarUrls={selectedAvatars} />
-                )}
-              </div>
-              <div className="flex items-center gap-4">
-                <DialogClose asChild>
-                  <Button
-                    onClick={() => {
-                      // reset all states
-                      setFormState((prev) => ({
-                        ...prev,
-                        name: "",
-                        users: [],
-                        selectedUsers: [],
-                      }));
-                    }}
-                    size={"sm"}
-                    className="flex items-center gap-2"
-                    variant={"outline"}
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
-
-                <Button size={"sm"} className="flex items-center gap-2">
-                  Add Friend
-                </Button>
-              </div>
             </div>
           </div>
         </DialogHeader>

@@ -17,7 +17,8 @@ export const createPendingRequest = async (
     },
   });
 
-  return pendingRequest;
+  const { User, ...pendingDetails } = pendingRequest;
+  return { user: User, id: pendingDetails.id };
 };
 
 export const deletePendingRequest = async (id: string) => {
