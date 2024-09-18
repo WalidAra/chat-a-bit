@@ -23,20 +23,13 @@ export class JwtHelper {
   }
 
   static verifyToken(token: string): any {
-    if (!this.jwtSecret) {
-      throw new Error("JWT secret is not defined");
-    }
-
     try {
+      if (!this.jwtSecret) {
+        throw new Error("JWT secret is not defined");
+      }
       return jwt.verify(token, this.jwtSecret);
     } catch (error) {
-      if (error instanceof jwt.TokenExpiredError) {
-        throw new Error("Token has expired");
-      } else if (error instanceof jwt.JsonWebTokenError) {
-        throw new Error("Invalid token");
-      } else {
-        throw new Error("Internal server error during token verification");
-      }
+      return null;
     }
   }
 

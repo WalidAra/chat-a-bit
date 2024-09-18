@@ -5,6 +5,7 @@ import { prisma } from "@/config";
 import { userSelection } from "@/constants";
 import destructUser from "@/scripts/destructUser";
 import { asyncHandler } from "@/scripts/asyncHandler";
+import { getUserByID } from "@/models";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { email, password, name, recall } = req.body as {
@@ -143,15 +144,39 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
     });
   }
 
-  const { id, recall } = JwtHelper.verifyToken(refreshToken);
-  const { accessToken } = JwtHelper.generateToken({ id }, recall, false);
+  const decoded = JwtHelper.verifyToken(refreshToken);
 
-  res.status(201).json({
-    status: true,
-    message: "Token refreshed successfully",
-    data: {
-      accessToken,
-    },
+  if (!decoded) {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
+    return res.status(403).json({
+      status: false,
+      message: "Unauthorized - Token expired",
+      data: null,
+    });
+  }
+  const { id, recall } = decoded;
+  const isUser = await getUserByID(id);
+
+  if (isUser) {
+    const { accessToken } = JwtHelper.generateToken({ id }, recall, false);
+    return res.status(201).json({
+      status: true,
+      message: "Token refreshed successfully",
+      data: {
+        accessToken,
+      },
+    });
+  }
+
+  res.status(404).json({
+    status: false,
+    message: "User not found",
+    data: null,
   });
 });
 

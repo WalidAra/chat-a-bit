@@ -7,6 +7,9 @@ import { useAuth, useFetch, useSocket } from "@/hooks";
 import { EntityWithUser } from "@/types";
 import { useEffect } from "react";
 import RequestCard from "./shared/RequestCard";
+import { toast } from "sonner";
+import { defaultPfp } from "@/constants";
+import { useNavigate } from "react-router-dom";
 
 const Requests = () => {
   const { token } = useAuth();
@@ -18,6 +21,7 @@ const Requests = () => {
     includeAccessToken: true,
   });
 
+  const navigate = useNavigate();
   const socket = useSocket();
 
   useEffect(() => {
@@ -26,6 +30,23 @@ const Requests = () => {
         setResponse((prev) =>
           prev ? { ...prev, data: [...prev.data, data] } : null
         );
+
+        toast(`New Friend Request`, {
+          description: `${data.user.name} sent you a friend request`,
+          action: {
+            label: "View",
+            onClick: () => {
+              navigate(`/home/requests`);
+            },
+          },
+          icon: (
+            <img
+              src={data.user.image || defaultPfp}
+              alt="User Avatar"
+              className="w-8 h-8 rounded-full"
+            />
+          ),
+        });
       });
     }
   }, [socket]);

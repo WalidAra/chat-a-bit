@@ -15,7 +15,6 @@ export const Auth = createContext<Props>({
 import React from "react";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  
   const [token, setToken] = React.useState<string | null>(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const searchToken = urlParams.get("token");
@@ -36,7 +35,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     includeAccessToken: false,
   });
 
-  if (isLoading === true) {
+  if (isLoading === true && response === null) {
     return null;
   }
 
