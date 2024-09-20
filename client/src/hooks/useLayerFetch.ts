@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { Fetch } from "@/types";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAxios } from "./useAxios";
 
 type Props = Fetch & {
@@ -19,35 +19,48 @@ export const useLayerFetch = <T>({
   dependencies = [],
   includeAccessToken,
 }: Props) => {
-  useEffect(() => {
-    const getData = async () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const fetchData = useCallback(async () => {
+    try {
       const res = await useAxios<T>({
         endpoint,
         method,
         feature,
         accessToken,
         includeAccessToken,
+        callback,
         data,
       });
 
       if (callback) {
         callback(res);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    endpoint,
+    method,
+    feature,
+    accessToken,
+    includeAccessToken,
+    callback,
+    data,
+  ]);
 
+  useEffect(() => {
     if (
       (accessToken && includeAccessToken === true) ||
       (accessToken === null && includeAccessToken === false)
     ) {
-      getData();
+      fetchData();
     }
-  }, [
-    accessToken,
-    data,
-    endpoint,
-    feature,
-    includeAccessToken,
-    method,
-    ...(Array.isArray(dependencies) ? dependencies : []),
-  ]);
+  }, [fetchData, accessToken, includeAccessToken, ...dependencies]);
+
+  return {
+    isLoading,
+  };
 };

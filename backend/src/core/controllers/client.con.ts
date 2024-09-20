@@ -198,20 +198,24 @@ export const getUserPendingRequests = asyncHandler(
   async (req: Request, res: Response) => {
     const { id } = (req as any).user;
 
-    const users = await prisma.pendingRequests.findMany({
+    const users = await prisma.friendRequests.findMany({
       where: {
-        clientId: id,
+        userId: id,
       },
       include: {
         User: {
           select: userSelection,
         },
+        Client: {
+          select: userSelection,
+        },
       },
     });
 
-    const formattedUsers = users.map(({ User, ...pendingDetails }) => ({
+    const formattedUsers = users.map(({ User, Client, ...pendingDetails }) => ({
       user: User,
       id: pendingDetails.id,
+      client: Client,
     }));
 
     res.status(200).json({

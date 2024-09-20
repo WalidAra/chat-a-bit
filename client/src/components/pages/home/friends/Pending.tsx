@@ -10,7 +10,9 @@ import PendingCard from "./shared/PendingCard";
 
 const Pending = () => {
   const { token } = useAuth();
-  const { isLoading, response, setResponse } = useFetch<EntityWithUser[]>({
+  const { isLoading, response, setResponse, refetch } = useFetch<
+    EntityWithUser[]
+  >({
     endpoint: "pending",
     feature: "client",
     method: "GET",
@@ -22,11 +24,25 @@ const Pending = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("pending", (data: EntityWithUser) => {
+      const handlePending = (data: EntityWithUser) => {
         setResponse((prev) =>
           prev ? { ...prev, data: [...prev.data, data] } : null
         );
-      });
+      };
+
+      const refetchData = async (obj: { refetch: true }) => {
+        if (obj.refetch === true) {
+          await refetch();
+        }
+      };
+
+      socket.on("pending", handlePending);
+      socket.on("canceled-deleted", refetchData);
+
+      return () => {
+        socket.off("pending", handlePending);
+        socket.off("canceled-deleted", refetchData);
+      };
     }
   }, [socket]);
 

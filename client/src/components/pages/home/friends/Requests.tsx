@@ -8,12 +8,13 @@ import { EntityWithUser } from "@/types";
 import { useEffect } from "react";
 import RequestCard from "./shared/RequestCard";
 import { toast } from "sonner";
-import { defaultPfp } from "@/constants";
 import { useNavigate } from "react-router-dom";
 
 const Requests = () => {
   const { token } = useAuth();
-  const { isLoading, response, setResponse } = useFetch<EntityWithUser[]>({
+  const { isLoading, response, setResponse, refetch } = useFetch<
+    EntityWithUser[]
+  >({
     endpoint: "requests",
     feature: "client",
     method: "GET",
@@ -26,7 +27,7 @@ const Requests = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("requests", (data: EntityWithUser) => {
+      const getNewRequest = (data: EntityWithUser) => {
         setResponse((prev) =>
           prev ? { ...prev, data: [...prev.data, data] } : null
         );
@@ -36,20 +37,27 @@ const Requests = () => {
           action: {
             label: "View",
             onClick: () => {
-              navigate(`/home/requests`);
+              navigate(`/friends/requests`);
             },
           },
-          icon: (
-            <img
-              src={data.user.image || defaultPfp}
-              alt="User Avatar"
-              className="w-8 h-8 rounded-full"
-            />
-          ),
         });
-      });
+      };
+
+      const refetchData = async (obj: { refetch: true }) => {
+        if (obj.refetch === true) {
+          await refetch();
+        }
+      };
+
+      socket.on("requests", getNewRequest);
+      socket.on("canceled-deleted", refetchData);
+
+      return () => {
+        socket.off("requests", getNewRequest);
+        socket.off("canceled-deleted", refetchData);
+      };
     }
-  }, [socket]);
+  }, []);
 
   return (
     <section className="w-full flex-1 flex flex-col gap-4">
@@ -74,7 +82,9 @@ const Requests = () => {
           response.data.map((user) => <RequestCard request={user} />)
         ) : (
           <div className="flex items-center justify-center w-full h-full">
-            <p className="text-muted-foreground">Pending list is empty</p>
+            <p className="text-muted-foreground">
+              There are no requests currently
+            </p>
           </div>
         ))
       )}

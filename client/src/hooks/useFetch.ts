@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
+
 import { Fetch, FetchResponse } from "@/types";
 import { useEffect, useState, useCallback } from "react";
 import { useAxios } from "./useAxios";
@@ -21,11 +22,13 @@ export const useFetch = <T>({
   response: FetchResponse<T> | null;
   isLoading: boolean;
   setResponse: React.Dispatch<React.SetStateAction<FetchResponse<T> | null>>;
+  refetch: () => Promise<void>;
 } => {
   const [response, setResponse] = useState<FetchResponse<T> | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchData = useCallback(async () => {
+    setIsLoading(true);
     try {
       const res = await useAxios<T>({
         endpoint,
@@ -36,6 +39,11 @@ export const useFetch = <T>({
         callback,
         data,
       });
+
+      if (callback) {
+        callback(res);
+      }
+
       setResponse(res);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -55,11 +63,17 @@ export const useFetch = <T>({
   useEffect(() => {
     if (
       (accessToken && includeAccessToken === true) ||
-      (accessToken === null && includeAccessToken === false)
+      (!accessToken && includeAccessToken === false)
     ) {
       fetchData();
-    }
+    } else {
+      setIsLoading(false);
+     }
   }, [fetchData, accessToken, includeAccessToken, ...dependencies]);
 
-  return { response, setResponse, isLoading };
+  const refetch = useCallback(() => {
+    return fetchData();
+  }, [fetchData]);
+
+  return { response, setResponse, isLoading, refetch };
 };

@@ -12,11 +12,14 @@ export const createFriendRequest = async (clientId: string, userId: string) => {
       User: {
         select: userSelection,
       },
+      Client: {
+        select: userSelection,
+      },
     },
   });
 
-  const { User, ...requestDetails } = friendRequest;
-  return { user: User, id: requestDetails.id };
+  const { User, Client, ...requestDetails } = friendRequest;
+  return { user: User, client: Client, id: requestDetails.id };
 };
 
 export const deleteFriendRequest = async (id: string) => {

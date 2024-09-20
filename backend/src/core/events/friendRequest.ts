@@ -1,4 +1,4 @@
-import { createFriendRequest, createPendingRequest } from "@/models";
+import { createFriendRequest, deleteFriendRequest } from "@/models";
 import { Server, Socket } from "socket.io";
 import { redisClient } from "@/helpers";
 
@@ -9,10 +9,8 @@ export const sendFriendRequest = (io: Server, socket: Socket) => {
   return socket.on(event, async (obj: { receiverId: string }) => {
     const { receiverId } = obj;
 
-    const pendingRequest = await createPendingRequest(userId, receiverId);
-    io.to(socket.id).emit("pending", pendingRequest);
-
     const friendRequest = await createFriendRequest(receiverId, userId);
+    io.to(socket.id).emit("pending", friendRequest);
     const receiverSocketId = await redisClient.hGet("online_users", receiverId);
 
     if (receiverSocketId) {
@@ -23,17 +21,27 @@ export const sendFriendRequest = (io: Server, socket: Socket) => {
 
 export const cancelOrDeclineFriendRequest = (io: Server, socket: Socket) => {
   const event = "cancelFriendRequest";
-  const userId = (socket as Socket & { userId: string }).userId;
 
-  return socket.on(event, (obj: { receiverId: string }) => {
-    const { receiverId } = obj;
+  return socket.on(event, async (obj: { requestId: string }) => {
+    const { requestId } = obj;
 
-    // delete pending request
-    // delete friend request
+    const deletedRequest = await deleteFriendRequest(requestId);
 
-    if (receiverId) {
-      // get user friend requests
-      // emit with replace:true
+    const clientSocketId = await redisClient.hGet(
+      "online_users",
+      deletedRequest.clientId
+    );
+    const userSocketId = await redisClient.hGet(
+      "online_users",
+      deletedRequest.userId
+    );
+
+    if (clientSocketId) {
+      io.to(clientSocketId).emit("canceled-deleted", { refetch: true });
+    }
+
+    if (userSocketId) {
+      io.to(userSocketId).emit("canceled-deleted", { refetch: true });
     }
   });
 };

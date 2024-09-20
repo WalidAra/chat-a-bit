@@ -78,4 +78,5 @@ export type Message = {
 export type EntityWithUser = {
   id: string;
   user: Client;
+  client: Client;
 };

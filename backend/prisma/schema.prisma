@@ -21,10 +21,7 @@ model User {
   SocialMediaLinks SocialMediaLinks[]
   UserBlockedList  Blocked[]          @relation("UserBlockedList")
   UserBlocked      Blocked[]          @relation("UserBlocked")
-
-  UserPendingList PendingRequests[] @relation("UserPendingList")
-  UserPending     PendingRequests[] @relation("UserPending")
-
+  
   UserFriendRequestsist FriendRequests[]  @relation("UserFriendRequestsist")
   UserFriendRequest     FriendRequests[]  @relation("UserFriendRequest")
 
@@ -65,16 +62,6 @@ model Blocked {
   userId   String
   Client   User   @relation("UserBlockedList", fields: [clientId], references: [id], onDelete: Cascade)
   User     User   @relation("UserBlocked", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([clientId, userId])
-}
-
-model PendingRequests {
-  id       String @id @default(uuid())
-  clientId String
-  userId   String
-  Client   User   @relation("UserPendingList", fields: [clientId], references: [id], onDelete: Cascade)
-  User     User   @relation("UserPending", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([clientId, userId])
 }
