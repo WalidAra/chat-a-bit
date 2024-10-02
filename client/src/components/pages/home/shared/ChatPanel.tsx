@@ -1,22 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Input } from "@/components/atoms/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LuPenSquare } from "react-icons/lu";
-import { useAuth, useFetch } from "@/hooks";
+import { useAuth, useFetch, useSocket } from "@/hooks";
 import ChatsContainer from "./ChatsContainer";
-import { Chat, Client, Message } from "@/types";
+import { Chat, Message } from "@/types";
+
+export type ChatProps = Chat & { message: Message | null };
 
 const ChatPanel = () => {
   const { token } = useAuth();
   const [searchValue, setSearchValue] = useState<string>("");
-  const { isLoading, response } = useFetch<
-    (Chat & { message: Message & { sender: Client } })[]
-  >({
+  const { isLoading, response, setResponse } = useFetch<ChatProps[]>({
     endpoint: "chats",
     method: "GET",
     feature: "client",
     accessToken: token,
     includeAccessToken: true,
   });
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (socket) {
+      const refetchData = async (obj: ChatProps) => {
+        setResponse((prev) => {
+          if (prev && prev.data) {
+            return {
+              ...prev,
+              data: [obj, ...prev.data],
+            };
+          }
+          return prev;
+        });
+      };
+
+      socket.on("new-chat", refetchData);
+
+      return () => {
+        socket.off("new-chat", refetchData);
+      };
+    }
+  }, [socket]);
 
   return (
     <div className="xl:w-80 md-[250px] overflow-auto h-full hidden md:flex flex-col gap-4 border-r border-border p-4">

@@ -13,7 +13,18 @@ const RequestCard = ({ request }: Props) => {
   return (
     <AccountCard user={request.user}>
       <div className="flex items-center gap-2">
-        <Button size={"sm"} variant={"outline"}>
+        <Button
+          onClick={() => {
+            if (socket) {
+              socket.emit("acceptFriendRequest", {
+                user: request.user,
+                id: request.id,
+              });
+            }
+          }}
+          size={"sm"}
+          variant={"outline"}
+        >
           Accept
         </Button>
         <Button

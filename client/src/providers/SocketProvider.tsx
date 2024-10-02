@@ -10,7 +10,7 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const socket = SocketInstance.getInstance(token as string);
 
   return (
-    <SocketContext.Provider value={socket as unknown as Socket}>
+    <SocketContext.Provider value={socket}>
       {children}
     </SocketContext.Provider>
   );

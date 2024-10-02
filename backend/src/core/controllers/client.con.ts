@@ -80,8 +80,10 @@ export const getUserChats = asyncHandler(
           },
 
           take: 1,
+        },
+        Member: {
           include: {
-            User: {
+            user: {
               select: userSelection,
             },
           },
@@ -89,17 +91,37 @@ export const getUserChats = asyncHandler(
       },
     });
 
-    const formattedChats = chats.map(({ Message, ...chat }) => {
-      const [latestMessage] = Message;
-      const { User: user, ...messageDetails } = latestMessage;
+    if (chats.length === 0) {
+      return res.status(200).json({
+        status: true,
+        message: "User chats fetched successfully",
+        data: [],
+      });
+    }
 
-      return {
-        ...chat,
-        message: {
-          ...messageDetails,
-          sender: user,
-        },
-      };
+    const formattedChats = chats.map(({ Member, Message, ...chat }) => {
+      const { name, ...chatDetails } = chat;
+
+      if (chat.isGroup === false) {
+        const formattedChat = {
+          ...chatDetails,
+          name:
+            id === Member[0].userId ? Member[1].user.name : Member[0].user.name,
+          image:
+            id === Member[0].userId
+              ? Member[1].user.image
+              : Member[0].user.image,
+
+          message: Message.length ? Message[0] : null,
+        };
+        return formattedChat;
+      } else if (chat.isGroup === true) {
+        const formattedChat = {
+          ...chat,
+          message: Message.length ? Message[0] : null,
+        };
+        return formattedChat;
+      }
     });
 
     return res.status(200).json({
@@ -109,7 +131,6 @@ export const getUserChats = asyncHandler(
     });
   }
 );
-
 export const getUserFriends = asyncHandler(
   async (req: Request, res: Response) => {
     const { id } = (req as any).user;

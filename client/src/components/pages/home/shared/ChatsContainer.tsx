@@ -1,9 +1,9 @@
-import { Chat, Client, Message } from "@/types";
 import ChatCard from "./ChatCard";
 import React from "react";
+import { ChatProps } from "./ChatPanel";
 
 type Props = {
-  chats: (Chat & { message: Message & { sender: Client } })[];
+  chats: ChatProps[];
 };
 
 const ChatsContainer = ({ chats }: Props) => {

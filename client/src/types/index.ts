@@ -28,23 +28,6 @@ export type Client = {
   image: string | null;
 };
 
-export type Notification =
-  | "friendRequest"
-  | "friendRequestAccepted"
-  | "message";
-
-export type PendingRequest = {
-  id: string;
-  clientId: string;
-  userId: string;
-};
-
-export type FriendRequest = {
-  id: string;
-  clientId: string;
-  userId: string;
-};
-
 export type Friend = {
   id: string;
   clientId: string;

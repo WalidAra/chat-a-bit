@@ -62,8 +62,8 @@ const AppRouter = () => {
               <Route path="requests" element={<Requests />} />
               <Route path="pending" element={<Pending />} />
             </Route>
-            <Route path="chats/:chatId" element={<></>} />
           </Route>
+          <Route path="chats/:chatId" element={<></>} />
         </Route>
       </Routes>
     </Router>

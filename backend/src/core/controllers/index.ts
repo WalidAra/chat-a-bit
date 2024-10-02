@@ -9,3 +9,5 @@ export {
   getUserFriendRequests,
   getUserPendingRequests,
 } from "./client.con";
+
+export { getUserLastChat, setUserLastChat } from "./chat.con";
